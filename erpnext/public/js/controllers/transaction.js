@@ -404,6 +404,10 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 			);
 		}
 
+		if (this.frm.doc.docstatus === 1 && frappe.model.can_create("Quality Inspection")) {
+			erpnext.utils.add_quality_control_lot_buttons(this.frm);
+		}
+
 		const inspection_type = ["Purchase Receipt", "Purchase Invoice", "Subcontracting Receipt"].includes(
 			this.frm.doc.doctype
 		)
@@ -420,7 +424,7 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 				child_row_reference: row.doc.name,
 				item_code: row.doc.item_code,
 				description: row.doc.description,
-				item_serial_no: row.doc.serial_no ? row.doc.serial_no.split("\n")[0] : null,
+				serial_no: row.doc.serial_no ? row.doc.serial_no.split("\n")[0] : null,
 				batch_no: row.doc.batch_no,
 			};
 		};
