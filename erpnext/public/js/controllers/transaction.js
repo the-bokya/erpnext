@@ -2873,13 +2873,6 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 						read_only_depends_on: 'eval:doc.inspection_basis === "Each Quantity"',
 					},
 					{
-						fieldtype: "Check",
-						fieldname: "inspection_required",
-						label: __("Required"),
-						in_list_view: true,
-						read_only: true,
-					},
-					{
 						fieldtype: "Data",
 						fieldname: "inspection_basis",
 						label: __("Inspection Basis"),
@@ -2971,7 +2964,6 @@ erpnext.TransactionController = class TransactionController extends erpnext.taxe
 							// rows the triggers demand start checked; the rest can be
 							// ticked for an ad-hoc inspection
 							__checked: item.inspection_required ? 1 : 0,
-							inspection_required: item.inspection_required,
 							item_code: item.item_code,
 							item_name: item.item_name,
 							qty: item.qty,
