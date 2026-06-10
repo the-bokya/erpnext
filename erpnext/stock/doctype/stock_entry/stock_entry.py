@@ -49,7 +49,7 @@ from .stock_entry_handler.material_transfer import (
 	MaterialTransferForManufactureStockEntry,
 	MaterialTransferStockEntry,
 )
-from .stock_entry_handler.qc_release import QCReleaseStockEntry
+from .stock_entry_handler.quality_control_release import QualityControlReleaseStockEntry
 from .stock_entry_handler.serial_batch import StockEntrySABB
 from .stock_entry_handler.subcontracting import SendToSubcontractorStockEntry
 
@@ -131,7 +131,7 @@ class StockEntry(StockController, SubcontractingInwardController):
 			"Return Raw Material to Customer",
 			"Subcontracting Delivery",
 			"Subcontracting Return",
-			"QC Release",
+			"Quality Control Release",
 		]
 		remarks: DF.Text | None
 		sales_invoice_no: DF.Link | None
@@ -198,7 +198,7 @@ class StockEntry(StockController, SubcontractingInwardController):
 			"Send to Subcontractor": SendToSubcontractorStockEntry,
 			"Material Issue": MaterialIssueStockEntry,
 			"Material Receipt": MaterialReceiptStockEntry,
-			"QC Release": QCReleaseStockEntry,
+			"Quality Control Release": QualityControlReleaseStockEntry,
 		}
 
 		self.purpose_cls = purpose_map.get(self.purpose)
