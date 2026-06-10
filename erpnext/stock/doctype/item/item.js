@@ -55,6 +55,12 @@ frappe.ui.form.on("Item", {
 	},
 
 	setup: function (frm) {
+		frm.set_query("stock_entry_type", "quality_triggers", function () {
+			// a Quality Control Release is the outcome of an inspection, not a
+			// movement that can trigger one
+			return { filters: { purpose: ["!=", "Quality Control Release"] } };
+		});
+
 		frm.add_fetch("attribute", "numeric_values", "numeric_values");
 		frm.add_fetch("attribute", "from_range", "from_range");
 		frm.add_fetch("attribute", "to_range", "to_range");
