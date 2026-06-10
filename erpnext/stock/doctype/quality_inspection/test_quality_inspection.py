@@ -16,6 +16,29 @@ from erpnext.stock.doctype.stock_entry.stock_entry_utils import make_stock_entry
 from erpnext.tests.utils import ERPNextTestSuite
 
 
+class TestNonNumericAcceptance(ERPNextTestSuite):
+	def test_acceptance_value_comparison_is_case_insensitive(self):
+		create_quality_inspection_parameter("_Test Casefold Parameter")
+		inspection = frappe.new_doc("Quality Inspection")
+		reading = inspection.append(
+			"readings",
+			{
+				"specification": "_Test Casefold Parameter",
+				"numeric": 0,
+				"value": "Yes",
+				"reading_value": " yes ",
+			},
+		)
+
+		# "yes" with different casing/whitespace passes a criteria of "Yes"
+		inspection.set_status_based_on_acceptance_values(reading)
+		self.assertEqual(reading.status, "Accepted")
+
+		reading.reading_value = "no"
+		inspection.set_status_based_on_acceptance_values(reading)
+		self.assertEqual(reading.status, "Rejected")
+
+
 class TestQualityInspection(ERPNextTestSuite):
 	def setUp(self):
 		super().setUp()
