@@ -29,6 +29,12 @@ class TestNonNumericAcceptance(ERPNextTestSuite):
 		inspection.set_status_based_on_acceptance_values(reading)
 		self.assertEqual(reading.status, "Rejected")
 
+		# an unrecorded reading is a draft in progress, not a rejection
+		reading.reading_value = "  "
+		reading.status = "Accepted"
+		inspection.set_status_based_on_acceptance_values(reading)
+		self.assertEqual(reading.status, "Accepted")
+
 
 def create_quality_inspection(**args):
 	args = frappe._dict(args)
