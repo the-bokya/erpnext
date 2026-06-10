@@ -65,6 +65,7 @@ def make_sl_entries(sl_entries, allow_negative_stock=False, via_landed_cost_vouc
 	                        stock)
 	"""
 	from erpnext.controllers.stock_controller import future_sle_exists
+	from erpnext.stock.services.quality_warehouse import validate_quality_warehouse_exit
 
 	if sl_entries:
 		cancelled = sl_entries[0].get("is_cancelled")
@@ -76,6 +77,7 @@ def make_sl_entries(sl_entries, allow_negative_stock=False, via_landed_cost_vouc
 		future_sle_exists(args, sl_entries)
 
 		for sle in sl_entries:
+			validate_quality_warehouse_exit(sle)
 			if cancelled:
 				sle["actual_qty"] = -flt(sle.get("actual_qty"))
 
