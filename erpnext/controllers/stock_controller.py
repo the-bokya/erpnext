@@ -332,8 +332,10 @@ class StockController(AccountsController):
 		)
 
 	def validate_inspection(self):
+		from erpnext.stock.services.quality_quarantine import apply_quarantine_routing
 		from erpnext.stock.services.quality_trigger_resolution import enforce_inspection_points
 
+		apply_quarantine_routing(self)
 		enforce_inspection_points(self)
 
 	def update_blanket_order(self):
