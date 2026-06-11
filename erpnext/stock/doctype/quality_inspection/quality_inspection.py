@@ -877,23 +877,16 @@ def item_query(doctype: Any, txt: str | None, searchfield: Any, start: int, page
 			return []
 		return ((item_code, frappe.get_cached_value("Item", item_code, "item_name")),)
 	else:
+		# every item on the reference document is inspectable — already-linked
+		# rows can carry further ad-hoc inspections, and the row link plus the
+		# consistency gates do the bookkeeping
 		my_filters = [
 			["items.parent", "=", filters.get("reference_name")],
 			"and",
 			["items.item_code", "like", f"%{txt}%"],
 			"and",
 			["docstatus", "<", 2],
-			"and",
-			["items.quality_inspection", "is", "not set"],
 		]
-
-		if reference_doctype == "Stock Entry":
-			my_filters.extend(
-				[
-					"and",
-					["items.t_warehouse", "is", "not set"],
-				]
-			)
 
 		return frappe.get_query(
 			reference_doctype,
