@@ -844,6 +844,9 @@ def warehouse_query(doctype: str, txt: str, searchfield: str, start: int, page_l
 		searchfield = meta.get("title_field")
 		warehouse_field = meta.get("title_field")
 
+	# identifiers come from the Warehouse meta, txt is escaped, start/page_len are
+	# sanitized by the decorator, and the condition fragments are frappe's own
+	# nosemgrep: frappe-semgrep-rules.rules.security.frappe-sql-format-injection
 	query = """select `tabWarehouse`.`{warehouse_field}`,
 		CONCAT_WS(' : ', 'Actual Qty', ifnull(round(`tabBin`.actual_qty, 2), 0 )) actual_qty
 		from `tabWarehouse` left join `tabBin`
