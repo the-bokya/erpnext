@@ -1508,6 +1508,9 @@ erpnext.utils.get_quality_indicator = function (doc) {
 	if (doc.quality_status === "Under Inspection") {
 		return [__("Under Inspection"), "orange", "quality_status,=,Under Inspection"];
 	}
+	if (doc.quality_status === "Awaiting Release") {
+		return [__("Awaiting Release"), "yellow", "quality_status,=,Awaiting Release"];
+	}
 	if (doc.quality_status === "Partially Released") {
 		return [__("Partially Released"), "yellow", "quality_status,=,Partially Released"];
 	}
