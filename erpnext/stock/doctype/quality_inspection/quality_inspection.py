@@ -8,7 +8,7 @@ import frappe
 from frappe import _
 from frappe.model.document import Document
 from frappe.model.mapper import get_mapped_doc
-from frappe.utils import cint, flt, get_number_format_info
+from frappe.utils import cint, flt, get_link_to_form, get_number_format_info
 
 from erpnext.stock.doctype.quality_inspection.unit_readings import UnitReadingsMixin
 from erpnext.stock.doctype.quality_inspection_template.quality_inspection_template import (
@@ -150,7 +150,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if lot_item and lot_item != self.item_code:
 				frappe.throw(
 					_("Quality Control Lot {0} holds item {1}, not {2}.").format(
-						frappe.bold(self.reference_name), frappe.bold(lot_item), frappe.bold(self.item_code)
+						get_link_to_form("Quality Control Lot", self.reference_name),
+						get_link_to_form("Item", lot_item),
+						get_link_to_form("Item", self.item_code),
 					),
 					title=_("Item Not On Reference"),
 				)
@@ -161,9 +163,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if production_item and production_item != self.item_code:
 				frappe.throw(
 					_("Job Card {0} produces item {1}, not {2}.").format(
-						frappe.bold(self.reference_name),
-						frappe.bold(production_item),
-						frappe.bold(self.item_code),
+						get_link_to_form("Job Card", self.reference_name),
+						get_link_to_form("Item", production_item),
+						get_link_to_form("Item", self.item_code),
 					),
 					title=_("Item Not On Reference"),
 				)
@@ -178,9 +180,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 		):
 			frappe.throw(
 				_("Item {0} is not on {1} {2}.").format(
-					frappe.bold(self.item_code),
+					get_link_to_form("Item", self.item_code),
 					_(self.reference_type),
-					frappe.bold(self.reference_name),
+					get_link_to_form(self.reference_type, self.reference_name),
 				),
 				title=_("Item Not On Reference"),
 			)
@@ -270,7 +272,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if info.item_code != self.item_code:
 				frappe.throw(
 					_("Serial No {0} belongs to item {1}, not {2}.").format(
-						frappe.bold(serial), frappe.bold(info.item_code), frappe.bold(self.item_code)
+						get_link_to_form("Serial No", serial),
+						get_link_to_form("Item", info.item_code),
+						get_link_to_form("Item", self.item_code),
 					)
 				)
 			# both-tracked items: the serial's own batch is the truth the named
@@ -278,7 +282,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if self.batch_no and info.batch_no and info.batch_no != self.batch_no:
 				frappe.throw(
 					_("Serial No {0} belongs to batch {1}, not {2}.").format(
-						frappe.bold(serial), frappe.bold(info.batch_no), frappe.bold(self.batch_no)
+						get_link_to_form("Serial No", serial),
+						get_link_to_form("Batch", info.batch_no),
+						get_link_to_form("Batch", self.batch_no),
 					),
 					title=_("Serial and Batch Disagree"),
 				)
@@ -364,7 +370,9 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if lot_batch and self.batch_no != lot_batch:
 				frappe.throw(
 					_("Quality Control Lot {0} holds batch {1}, not {2}.").format(
-						self.reference_name, frappe.bold(lot_batch), frappe.bold(self.batch_no)
+						get_link_to_form("Quality Control Lot", self.reference_name),
+						get_link_to_form("Batch", lot_batch),
+						get_link_to_form("Batch", self.batch_no),
 					),
 					title=_("Inspected Batch Mismatch"),
 				)
@@ -391,7 +399,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 				_(
 					"Batch {0} is not on the document row under inspection — only the stock "
 					"actually moving can be inspected."
-				).format(frappe.bold(self.batch_no)),
+				).format(get_link_to_form("Batch", self.batch_no)),
 				title=_("Inspected Batch Mismatch"),
 			)
 
@@ -444,7 +452,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 							"Quality Control Lot {2} — only the lot's own units can be inspected."
 						).format(
 							frappe.bold(", ".join(sorted(missing))),
-							frappe.bold(lot.source_document),
+							get_link_to_form(lot.source_document_type, lot.source_document),
 							self.reference_name,
 						),
 						title=_("Inspected Serials Mismatch"),
@@ -462,7 +470,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 							"{2} is quarantined."
 						).format(
 							frappe.bold(", ".join(strangers)),
-							frappe.bold(lot.quality_warehouse),
+							get_link_to_form("Warehouse", lot.quality_warehouse),
 							self.reference_name,
 						),
 						title=_("Inspected Serials Mismatch"),
@@ -517,7 +525,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 				_(
 					"Record the sampled Serial Nos before submission — {0} is serialized, and the "
 					"verdict must say which units it covers."
-				).format(frappe.bold(self.item_code)),
+				).format(get_link_to_form("Item", self.item_code)),
 				title=_("Serial Nos Missing"),
 			)
 		# the bundle carries serials per unit but no batch: only a lot reference
@@ -529,7 +537,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 				_(
 					"Record the Batch No before submission — {0} is batch-tracked, and the verdict "
 					"must say which batch it covers."
-				).format(frappe.bold(self.item_code)),
+				).format(get_link_to_form("Item", self.item_code)),
 				title=_("Batch No Missing"),
 			)
 
@@ -583,7 +591,7 @@ class QualityInspection(UnitReadingsMixin, Document):
 			if not self.has_recorded_reading(reading):
 				frappe.throw(
 					_("Row #{0}: Record a reading for {1} before submission.").format(
-						reading.idx, frappe.bold(reading.specification)
+						reading.idx, get_link_to_form("Quality Inspection Parameter", reading.specification)
 					),
 					title=_("Reading Missing"),
 				)
