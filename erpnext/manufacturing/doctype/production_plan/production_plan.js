@@ -85,21 +85,9 @@ frappe.ui.form.on("Production Plan", {
 			} else frappe.msgprint(__("Please enter Item first"));
 		});
 
-		frm.set_query("warehouse", "mr_items", (doc) => {
-			return {
-				filters: {
-					company: doc.company,
-				},
-			};
-		});
+		frm.set_query("warehouse", "mr_items", (doc) => erpnext.queries.warehouse(doc));
 
-		frm.set_query("warehouse", "po_items", (doc) => {
-			return {
-				filters: {
-					company: doc.company,
-				},
-			};
-		});
+		frm.set_query("warehouse", "po_items", (doc) => erpnext.queries.warehouse(doc));
 	},
 
 	refresh(frm) {

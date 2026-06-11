@@ -850,6 +850,7 @@ def warehouse_query(doctype: str, txt: str, searchfield: str, start: int, page_l
 		on `tabBin`.warehouse = `tabWarehouse`.name {bin_conditions}
 		where
 			`tabWarehouse`.`{key}` like {txt}
+			and ifnull(`tabWarehouse`.warehouse_type, '') not in ('Quality', 'Rejected')
 			{fcond} {mcond}
 		order by ifnull(`tabBin`.actual_qty, 0) desc, `tabWarehouse`.`{warehouse_field}` asc
 		limit
