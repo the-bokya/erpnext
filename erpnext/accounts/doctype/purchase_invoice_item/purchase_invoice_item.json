@@ -105,6 +105,7 @@
   "col_break6",
   "purchase_order",
   "po_detail",
+  "goods_inward_note",
   "purchase_receipt",
   "pr_detail",
   "sales_invoice_item",
@@ -691,6 +692,17 @@
    "search_index": 1
   },
   {
+   "description": "The custody note this row receives against.",
+   "fieldname": "goods_inward_note",
+   "fieldtype": "Link",
+   "label": "Goods Inward Note",
+   "no_copy": 1,
+   "options": "Goods Inward Note",
+   "print_hide": 1,
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
    "fieldname": "purchase_receipt",
    "fieldtype": "Link",
    "label": "Purchase Receipt",
@@ -1010,7 +1022,7 @@
  "idx": 1,
  "istable": 1,
  "links": [],
- "modified": "2026-06-08 21:00:00.000000",
+ "modified": "2026-06-12 00:00:01.000000",
  "modified_by": "Administrator",
  "module": "Accounts",
  "name": "Purchase Invoice Item",
